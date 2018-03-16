@@ -1,37 +1,88 @@
 .navbar{
-width:100vw;
-height:80px;
-background:red;
-display:flex;
+        width:100vw;
+        height:80px;
+        background:#61A7E1;
+        display:flex;
         flex-direction:row;
         justify-content:space-between;
         align-items:center;
         box-sizing:border-box;
-padding:0 10px;
+        padding:0 10px;
+}
+.navbar-left{
+        flex-grow: 1;
+        color: white;
+        font-size: xx-large;
+        font-family: sans-serif;
 }
 .navbar-right{
-display:flex;
+        display:flex;
+        flex-grow: 2;
         flex-direction:column;
         justify-content:center;
-        align-items:center;
-width:40%;
+        align-items:flex-end;
+}
+.form-control{
+        border: 1.5px #ddd solid;
+        font-size: large;
+        border-radius: 3px;
+        font-family: sans-serif;
+        color: #3575D3; 
+        padding: 3px;
 }
 .main{
-display:flex;
+        display:flex;
         flex-direction:row;
         justify-content:center;
-width:100vw;
+        width:100vw;
 }
 .main-left{
-width:60vw;
+        width:60vw;
 }
 .main-right{
-width:40vw;
+        width:40vw;
 }
 #msform{
-display:flex;
+        display:flex;
         flex-direction:column;
         justify-content:space-evenly;
-height:500px;
-}
+        height:500px;
+        background: #eee;
+        box-sizing: border-box;
+        padding: 10px 20px;
+        font-family:sans-serif;
+        color: #3F3844;
 
+}
+.form-title{
+        font-size: x-large;
+}
+.submit{
+        background: #3575D3;
+        color: white;
+        padding: 8px 10px;
+        align-self: center;
+        font-size: larger;
+        width: 120px;
+        border: none; 
+        border-radius: 3px;
+}
+.login-message{
+        color: #155724;
+        background-color: #d4edda;
+        border-radius: 2px;
+        padding:15px 0;
+}
+.login-message a {
+        color: #155724;
+        font-weight: 600;
+        text-decoration: none;
+}
+.error{
+        padding: 7.5px 0 ;
+        width: 100%;
+        text-align: center;
+        color: #f64747;
+        font-size: 16px;
+        margin-bottom: 5px;
+}
