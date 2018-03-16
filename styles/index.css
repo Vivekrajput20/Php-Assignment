@@ -1,0 +1,37 @@
+.navbar{
+width:100vw;
+height:80px;
+background:red;
+display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+        box-sizing:border-box;
+padding:0 10px;
+}
+.navbar-right{
+display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+width:40%;
+}
+.main{
+display:flex;
+        flex-direction:row;
+        justify-content:center;
+width:100vw;
+}
+.main-left{
+width:60vw;
+}
+.main-right{
+width:40vw;
+}
+#msform{
+display:flex;
+        flex-direction:column;
+        justify-content:space-evenly;
+height:500px;
+}
+
