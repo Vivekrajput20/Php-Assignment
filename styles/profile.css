@@ -1,0 +1,36 @@
+#msform{
+display:flex;
+        flex-direction:column;
+background:#F1F1F1;
+width:100vw;
+      align-items:center;
+height:400px;
+justify-content:space-evenly;
+}
+.form-control{
+padding:5px 10px;
+        border-radius:3px;
+border:#aaaaaa 1px solid;
+width:250px;
+}
+#msform div{
+width:35%;
+display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+}
+.head{
+width:100vw;
+display:flex;
+          flex-direction:row;
+        justify-content:center;
+padding:5px 0;
+        font-size:x-large;
+background:#5F5F5F;
+color:#FFF;
+}
+.head a{
+color:#fff;
+      margin-right:20px;
+      text-decoration:none;
+}
