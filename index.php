@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (isset($_SESSION["uid"]))
+ header('location:includes/home.php');
+ ?>
 <!DOCTYPE html> 
 <meta charset="utf-8">
 <head>
@@ -180,6 +185,7 @@ else if ($_SERVER["REQUEST_METHOD"] === "POST" && prepare($_POST["formtype"])===
         $_SESSION["username"] = $user["username"];
         $_SESSION["gender"] = $user["gender"];
         $conn->close();
+       header('Location: includes/home.php');
       }
       else{
         $pwderr = "<div class=\"lerror\"> Wrong Email or Password ! </div>";
