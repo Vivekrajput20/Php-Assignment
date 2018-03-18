@@ -54,6 +54,9 @@
         color: #3F3844;
 
 }
+.form-control{
+        width: 40%;
+}
 .form-title{
         font-size: x-large;
 }
@@ -61,7 +64,7 @@
         background: #3575D3;
         color: white;
         padding: 8px 10px;
-        align-self: center;
+        align-self: flex start;
         font-size: larger;
         width: 120px;
         border: none; 

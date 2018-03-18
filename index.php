@@ -8,6 +8,7 @@ if (isset($_SESSION["uid"]))
 <head>
 <title>Homepage</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="scripts/index.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="styles/reset.css">
 <link rel="stylesheet" href="styles/index.css">
@@ -220,9 +221,9 @@ else if ($_SERVER["REQUEST_METHOD"] === "POST" && prepare($_POST["formtype"])===
 <form id="msform" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 <input type="hidden" value="signup" name = "formtype" >
 <h2 class="form-title">Create your account</h2>
-<input type="text" class="form-control" name="Username" value="<?php echo $uname ?>" pattern="^[a-zA-Z]+([\.-_]*[0-9]*[a-zA-Z]*[0-9]*)*$" required  placeholder="Username"  />
+<div><input type="text" class="form-control" onkeyup="validate(this.value ,'ajax-v1' , 'username')" name="Username" value="<?php echo $uname ?>" pattern="^[a-zA-Z]+([\.-_]*[0-9]*[a-zA-Z]*[0-9]*)*$" required  placeholder="Username"  /><span id="ajax-v1"></span></div>
 <?php echo $usererr ?>
-<input type="text" class="form-control" name="email" value="<?php echo $email ?>" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"  placeholder="Email"  />
+<div><input type="text" class="form-control" name="email" onkeyup="validate(this.value ,'ajax-v2' , 'email')" value="<?php echo $email ?>" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"  placeholder="Email"  /><span id="ajax-v2"></span></div>
 <?php echo $emailerr ?>
 <input type="text" class="form-control" name="phone" value="<?php echo $phone ?>" placeholder="Phone Number" required pattern="(^((\+91|0)([\s-])?)?[7-9]{1}[0-9]{3}\4[0-9]{3}\4[0-9]{3}$|^[7-9]{1}[0-9]{3}([\s-])?[0-9]{3}\5[0-9]{3}$)"  />
 <?php echo $phoneerr ?>
