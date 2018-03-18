@@ -66,6 +66,8 @@ if ($_SERVER["REQUEST_METHOD"]=== "POST"){
 </div>
 <a href="profile.php">Profile </a>
 <br>
+<a href="cp.php">Change Password</a>
+<br>
 <a href="logout.php">Logout</a>
 </div>
 <div class = "right">

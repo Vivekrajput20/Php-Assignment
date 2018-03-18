@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (isset($_SESSION["uid"]))
- header('location:includes/home.php');
- ?>
+header('location:includes/home.php');
+?>
 <!DOCTYPE html> 
 <meta charset="utf-8">
 <head>
@@ -185,64 +185,122 @@ else if ($_SERVER["REQUEST_METHOD"] === "POST" && prepare($_POST["formtype"])===
         $_SESSION["name"] = $user["name"];
         $_SESSION["username"] = $user["username"];
         $_SESSION["gender"] = $user["gender"];
-        $conn->close();
-       header('Location: includes/home.php');
+        $uiid = $user["userid"];
+        if (isset($_POST["remember"])){
+          if( $_POST["remember"] ==1 ){
+            $r=session_id();
+            $cookie_name = "user";
+            setcookie($cookie_name, $r, time() + (86400 * 30), "/");
+            setcookie("uname",$user["name"], time() + (86400 * 30), "/");
+
+            $sql = "INSERT INTO vivek_cookie (uid , sid ) VALUES ('$uiid' , '$r')";
+            if ($conn->query($sql) === TRUE) {
+            }
+            else{
+              echo "Error: " . $sql . "<br>" . $conn->error;
+            }
+
+          }
+        }
+$conn->close();
+        header('location:includes/home.php');
+
       }
       else{
         $pwderr = "<div class=\"lerror\"> Wrong Email or Password ! </div>";
       };
+      $conn->close();
+
     }
 
 
   };
-}  
+}
+else if ($_SERVER["REQUEST_METHOD"] === "POST" && prepare($_POST["formtype"])==="alogin"){
+  $sid = prepare($_POST["sid"]);
+  require_once("includes/config.php");
+  $conn = new mysqli($servername, $username , $passd , $dbname);
+  $sid= $conn->escape_string($sid);      
+  if($conn->connect_error){
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $sql = "select * From vivek_cookie inner join vivek_userinfo on vivek_cookie.uid = vivek_userinfo.userid  where sid = '$sid'";
+  $result = $conn->query($sql);
+  if ($result->num_rows ===1){
+    $user = $result->fetch_assoc();
+    $_SESSION["uid"] = $user["userid"];
+    $_SESSION["email"] = $user["email"];
+    $_SESSION["name"] = $user["name"];
+    $_SESSION["username"] = $user["username"];
+    $_SESSION["gender"] = $user["gender"];
+$conn->close();
+        header('location:includes/home.php');
+
+  }
+}
 ?>
 <div class="navbar">
 <div class="navbar-left">ConnectThemUp</div>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"  class="navbar-right">
-<input type="hidden" value="login" name = "formtype" >
-<div>
-<input type="text" class="form-control"  placeholder="Username" name="usr" value="">
-<?php echo $usrerr ?>
+<?php
+if(isset($_COOKIE["user"]) && isset($_COOKIE["uname"])) { ?>
+  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"  class="navbar-right">
+    <input type="hidden" value="alogin" name = "formtype" >
+    <input type="hidden" value="<?php echo $_COOKIE['user']; ?>" name = "sid" >
+    Welcome back <?php echo $_COOKIE["uname"] ?>.
+   <div><a href = "includes/logout.php?q=reset">Logout</a> <input type="Submit" value="login back" class="submit" name="submit">
+   </div>
+    </form>
+    </div>
 
-<input type="password" class="form-control" placeholder="password" name="pwd" value="">
-</div>
-<div>
-<label for="remember">Remember me</label>
-<input type="checkbox" id="remember" name="remember"  value="1">
-<input type="submit" value="Login" class="submit" name="submit">
-</div>
-</form>
-</div>
-<div class="main">
-<div class="main-left"></div>
-<div class="main-right">
+    <?php 
+}
+else{
+  ?>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"  class="navbar-right">
+    <input type="hidden" value="login" name = "formtype" >
+    <div>
+    <input type="text" class="form-control"  placeholder="Username"  required pattern="(^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$|^[a-zA-Z]+([\.-_]*[0-9]*[a-zA-Z]*[0-9]*)*$)"  name="usr" value="">
 
-<form id="msform" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-<input type="hidden" value="signup" name = "formtype" >
-<h2 class="form-title">Create your account</h2>
-<div><input type="text" class="form-control" onkeyup="validate(this.value ,'ajax-v1' , 'username')" name="Username" value="<?php echo $uname ?>" pattern="^[a-zA-Z]+([\.-_]*[0-9]*[a-zA-Z]*[0-9]*)*$" required  placeholder="Username"  /><span id="ajax-v1"></span></div>
-<?php echo $usererr ?>
-<div><input type="text" class="form-control" name="email" onkeyup="validate(this.value ,'ajax-v2' , 'email')" value="<?php echo $email ?>" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"  placeholder="Email"  /><span id="ajax-v2"></span></div>
-<?php echo $emailerr ?>
-<input type="text" class="form-control" name="phone" value="<?php echo $phone ?>" placeholder="Phone Number" required pattern="(^((\+91|0)([\s-])?)?[7-9]{1}[0-9]{3}\4[0-9]{3}\4[0-9]{3}$|^[7-9]{1}[0-9]{3}([\s-])?[0-9]{3}\5[0-9]{3}$)"  />
-<?php echo $phoneerr ?>
-<input type="text" class="form-control" name="fname" value="<?php echo $fname ?>"  placeholder="Name" required pattern="^[a-zA-Z]{1}[a-zA-Z\s'-]+[a-zA-Z]{1}$"  />
-<?php echo $nameerr ; ?>
-<div class="gender">
-<input type="radio" class="gen" name="gender" value="male" checked> Male
-<input type="radio" class="gen" name="gender" value="female"> Female
-<input type="radio" class="gen" name="gender" value="other"> Other
-</div>
+    <input type="password" required pattern="[a-zA-Z\d!@#\$%\^&\*]{8,}"  class="form-control" placeholder="password" name="pwd" value="">
+  <?php echo $usrerr ?>
+    <?php echo $pwderr ?>
+    </div>
+    <div>
+    <label for="remember">Remember me</label>
+    <input type="checkbox" id="remember" name="remember"  value="1">
+    <input type="submit" value="Login" class="submit" name="submit">
+    </div>
+    </form>
+    </div>
+    <?php } ?>
+    <div class="main">
+    <div class="main-left"></div>
+    <div class="main-right">
+    <form id="msform" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <input type="hidden" value="signup" name = "formtype" >
+    <h2 class="form-title">Create your account</h2>
+    <div><input type="text" class="form-control" onkeyup="validate(this.value ,'ajax-v1' , 'username')" name="Username" value="<?php echo $uname ?>" pattern="^[a-zA-Z]+([\.-_]*[0-9]*[a-zA-Z]*[0-9]*)*$" required  placeholder="Username"  /><span id="ajax-v1"></span></div>
+    <?php echo $usererr ?>
+    <div><input type="text" class="form-control" name="email" onkeyup="validate(this.value ,'ajax-v2' , 'email')" value="<?php echo $email ?>" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"  placeholder="Email"  /><span id="ajax-v2"></span></div>
+    <?php echo $emailerr ?>
+    <input type="text" class="form-control" name="phone" value="<?php echo $phone ?>" placeholder="Phone Number" required pattern="(^((\+91|0)([\s-])?)?[7-9]{1}[0-9]{3}\4[0-9]{3}\4[0-9]{3}$|^[7-9]{1}[0-9]{3}([\s-])?[0-9]{3}\5[0-9]{3}$)"  />
+    <?php echo $phoneerr ?>
+    <input type="text" class="form-control" name="fname" value="<?php echo $fname ?>"  placeholder="Name" required pattern="^[a-zA-Z]{1}[a-zA-Z\s'-]+[a-zA-Z]{1}$"  />
+    <?php echo $nameerr ; ?>
+    <div class="gender">
+    <input type="radio" class="gen" name="gender" value="male" checked> Male
+    <input type="radio" class="gen" name="gender" value="female"> Female
+    <input type="radio" class="gen" name="gender" value="other"> Other
+    </div>
 
-<input type="password" class="form-control" name="pass" placeholder="Password" required pattern="[a-zA-Z\d!@#\$%\^&\*]{8,}" />
-<?php echo $passerr ; ?>
-<input type="password" class="form-control" name="cpass" placeholder="Confirm Password" required pattern="[a-zA-Z\d!@#\$%\^&\*]{8,}" />
-<?php echo $pass2err ; ?>
-<?php echo $success ?>
-<input type="submit" name="submit" class="submit action-button" value="Submit"  />
-</form>
-</div>
-</div> 
-</body>
-</html>
+    <input type="password" class="form-control" name="pass" placeholder="Password" required pattern="[a-zA-Z\d!@#\$%\^&\*]{8,}" />
+    <?php echo $passerr ; ?>
+    <input type="password" class="form-control" name="cpass" placeholder="Confirm Password" required pattern="[a-zA-Z\d!@#\$%\^&\*]{8,}" />
+    <?php echo $pass2err ; ?>
+    <?php echo $success ?>
+    <input type="submit" name="submit" class="submit action-button" value="Submit"  />
+    </form>
+    </div>
+    </div> 
+    </body>
+    </html>
